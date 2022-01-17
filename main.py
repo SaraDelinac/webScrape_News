@@ -46,7 +46,6 @@ for page in range(1,10):
 
             # write down the articles with more than 2 occurrences of the words
             if matchesno > 2:
-                print(artHead + ': ' + str(matchesno) + ' wynikow')
                 writer.writerow([artHead, matchesno, arturl])
 
 # write down how many articles have been searched
