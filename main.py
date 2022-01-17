@@ -3,15 +3,15 @@ import requests
 import re
 import csv
 
-# all the search results will be written down in a created file.csv
+# create and prepare the csv file for the records
 file = open('strefa-biznesu.csv', 'w')
 pagesrc = 'https://dziennikbaltycki.pl/strefa-biznesu/z-regionu'
 source = requests.get(pagesrc).text
 soup = BeautifulSoup(source, 'lxml')
 writer = csv.writer(file)
-writer.writerow(['Article headline', 'No of matches', 'Link'])
+writer.writerow(['Article headline', 'Number of matches', 'Link to the article'])
 
-# loop over every page of the last 10 pages on the newspage Dziennik Baltycki
+# loop through every page of the last 10 pages on the newspage
 for page in range(1,10):
     nextpagesource = requests.get(f"https://dziennikbaltycki.pl/strefa-biznesu/z-regionu/{page}").text
     soup = BeautifulSoup(nextpagesource, "lxml")
@@ -35,10 +35,11 @@ for page in range(1,10):
         artsoup = BeautifulSoup(artsource, 'lxml')
         artText = artsoup.findAll('p', class_=None)
         artHead = artsoup.find('h1').text
+        # exclude the 'Binzes w regionie' headline as it is not linked to any article
         if artHead == 'Biznes w regionie':
             pass
+        # search through the paragraphs of the article and counting occurrences
         else:
-            # search through the paragraphs of the article and counting occurrences
             # concatenate paragraphs of the article
             par_text = [par.text for par in artText]
             all_par = '-'.join(par_text)
